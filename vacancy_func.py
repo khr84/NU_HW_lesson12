@@ -42,16 +42,17 @@ class Vacancy:
             high = salary['to']
             gross = 0.87 if salary['gross'] else 1
             cur = salary['currency']
-            if isinstance(low, int):
+            if isinstance(low, int) and isinstance(high, int):
                 low = round(low * gross / self.currency[cur])
-            else:
-                if isinstance(high, int):
-                    low = round(high * gross / self.currency[cur])
-            if isinstance(high, int):
+                high = round(high * gross / self.currency[cur])
+            elif isinstance(low, int):
+                high = round(low * gross / self.currency[cur])
+                low = round(low * gross / self.currency[cur])
+            elif isinstance(high, int):
+                low = round(high * gross / self.currency[cur])
                 high = round(high * gross / self.currency[cur])
             else:
-                if isinstance(low, int):
-                    high = round(low * gross / self.currency[cur])
+                pass
             self.salary_list.append({'low':low, 'high':high})
         except TypeError:
             pass

@@ -14,8 +14,10 @@ if ' ' in search_res.search_vacancy:
         strict_search = input('Строгий поиск: y/n ').lower()
     if strict_search == 'y':
         params['text'] = f'\"{search_res.search_vacancy}\"'
+        search_res.search_strict = True
     else:
         params['text'] = search_res.search_vacancy
+        search_res.search_strict = False
 else:
     params['text'] = search_res.search_vacancy
 
@@ -33,6 +35,7 @@ if search_by_area_res:
     while area_str not in search_res.areas_dict:
         area_str = input('Введите регион поиска: ')
     params['area'] = search_res.areas_dict[area_str]
+    search_res.search_area = area_str
 params['page'] = 0
 
 search_res.get_search_data(params)

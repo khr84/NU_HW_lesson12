@@ -10,6 +10,8 @@ class Search:
         self.per_page = 100
         self.areas_dict = dict()
         self.vacancies_data = vac.Vacancy()
+        self.search_strict = False
+        self.search_area = 'None'
         self.search_vacancy = ''
         self.search_count = 0
         self.requirement_count = 0
@@ -40,10 +42,15 @@ class Search:
         cnt_salary = len(self.vacancies_data.salary_list)
         low = 0
         high = 0
-        for salary in self.vacancies_data.salary_list:
-            low += salary['low']
-            high += salary['high']
+        if cnt_salary > 0:
+            for salary in self.vacancies_data.salary_list:
+                low += salary['low']
+                high += salary['high']
+        else:
+            cnt_salary = 1 #чтобы уйти от деления на 0
         self.result['keywords'] = self.search_vacancy
+        self.result['search_strict'] = self.search_strict
+        self.result['area'] = self.search_area
         self.result['count'] = self.search_count
         self.result['salary'] = {'from': round(low / cnt_salary), 'to': round(high / cnt_salary), 'vacancy_with_salary': cnt_salary}
         self.result['vacancy_for_requirements'] = self.requirement_count
