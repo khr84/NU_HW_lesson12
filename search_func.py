@@ -38,6 +38,23 @@ class Search:
                        'percent': round(self.vacancies_data.skills[skill] * 100 / cnt, 1)} for skill in
                       self.vacancies_data.skills]
         list_skill = sorted(list_skill, key=lambda x: x['count'], reverse=True)
+        # выбираем топ 5
+        res_list = []
+        res_cnt = 0
+        if len(list_skill) > 1:
+            for i in range(len(list_skill)):
+                res_list.append(list_skill[i])
+                res_cnt += list_skill[i]['count']
+                if list_skill[i]['count'] == list_skill[i + 1]['count']:
+                    continue
+                else:
+                    if len(res_list) >= 5:
+                        break
+                    else:
+                        continue
+        list_skill = res_list
+        list_skill.append({'name':'other', 'count':cnt - res_cnt, 'percent': round(1-res_cnt/cnt, 1)})
+
 
         cnt_salary = len(self.vacancies_data.salary_list)
         low = 0
