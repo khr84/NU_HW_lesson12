@@ -8,19 +8,28 @@ class Search:
 
     def __init__(self):
         self.per_page = 100
-        self.areas_dict = dict()
-        self.vacancies_data = vac.Vacancy()
+        hh_dict = vac.Dictionaries()
+        self.areas_dict = hh_dict.init_areas()
+        self.cur_dict = hh_dict.init_currency()
         self.search_strict = False
+        self.vacancies_data = vac.Vacancy()
         self.search_area = 'None'
         self.search_vacancy = ''
+        self.params = dict()
         self.search_count = 0
         self.requirement_count = 0
         self.result = dict()
 
+    def set_search_text(self, strict):
+        self.search_strict = True if strict == 'y' else False
+        self.params['text'] = f'\"{self.search_vacancy}\"' if self.search_strict else self.search_vacancy
 
-    def get_search_data(self, params):
-        params['per_page'] = self.per_page
-        self.search_result = requests.get(self.url_vacancies, params=params).json()
+    def set_area(self, area):
+        self.search_area = area
+        self.params['area'] = self.areas_dict[area]
+
+    def get_search_data(self):
+        self.search_result = requests.get(self.url_vacancies, params=self.params).json()
 
     def get_vacancies_data(self):
         items = self.search_result['items']
@@ -28,7 +37,7 @@ class Search:
             url_vacancy = items[i]['url']
             result_vacancy = requests.get(url_vacancy).json()
             self.vacancies_data.get_skills(result_vacancy)
-            self.vacancies_data.get_salary(result_vacancy)
+            self.vacancies_data.get_salary(result_vacancy, self.cur_dict)
 
     def get_result(self):
         cnt = 0
@@ -53,7 +62,7 @@ class Search:
                     else:
                         continue
         list_skill = res_list
-        list_skill.append({'name':'other', 'count':cnt - res_cnt, 'percent': round(1-res_cnt/cnt, 1)})
+        list_skill.append({'name':'other', 'count':cnt - res_cnt, 'percent': round((1-res_cnt/cnt)*100, 1)})
 
 
         cnt_salary = len(self.vacancies_data.salary_list)
