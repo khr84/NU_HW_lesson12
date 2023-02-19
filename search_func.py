@@ -7,7 +7,6 @@ class Search:
     url_vacancies = f'{DOMAIN}vacancies'
 
     def __init__(self):
-        self.per_page = 100
         hh_dict = vac.Dictionaries()
         self.areas_dict = hh_dict.init_areas()
         self.cur_dict = hh_dict.init_currency()
@@ -17,8 +16,11 @@ class Search:
         self.search_vacancy = ''
         self.params = dict()
         self.search_count = 0
+        self.pages = 0
         self.requirement_count = 0
         self.result = dict()
+        self.params['period'] = 10
+        self.params['per_page'] = 100
 
     def set_search_text(self, strict):
         self.search_strict = True if strict == 'y' else False
@@ -43,6 +45,9 @@ class Search:
         cnt = 0
         for skill in self.vacancies_data.skills:
             cnt += self.vacancies_data.skills[skill]
+        # заглушка на деление на 0
+        if cnt == 0:
+            cnt = 1
         list_skill = [{'name': skill, 'count': self.vacancies_data.skills[skill],
                        'percent': round(self.vacancies_data.skills[skill] * 100 / cnt, 1)} for skill in
                       self.vacancies_data.skills]
@@ -81,3 +86,22 @@ class Search:
         self.result['salary'] = {'from': round(low / cnt_salary), 'to': round(high / cnt_salary), 'vacancy_with_salary': cnt_salary}
         self.result['vacancy_for_requirements'] = self.requirement_count
         self.result['requirements'] = list_skill
+
+    def search_first(self):
+        self.params['page'] = 0
+        self.get_search_data()
+        self.search_count = self.search_result['found']
+        self.requirement_count = 2000 if self.search_count > 2000 else self.search_count
+        self.pages = self.search_result['pages']
+        if self.search_count > 0:
+            self.get_vacancies_data()
+
+    def search_last(self):
+        if self.pages > 1:
+            for page in range(1, self.pages):
+                print(1)
+                self.params['page'] = page
+                self.get_search_data()
+                self.get_vacancies_data()
+        else:
+            pass

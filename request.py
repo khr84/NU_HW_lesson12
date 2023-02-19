@@ -1,11 +1,9 @@
 import search_func as search
 import json
 
-search_req = search.Search()
 
 if __name__ == '__main__':
-
-
+    search_req = search.Search()
     search_req.search_vacancy = input('Введите вакансию для поиска: ')
 
     # строгий поиск
@@ -25,29 +23,16 @@ if __name__ == '__main__':
             search_req.set_area(area_str)
 
     # поиск
-    search_req.params['page'] = 0
-    search_req.get_search_data()
-    search_req.search_count = search_req.search_result['found']
-    search_req.requirement_count = 2000 if search_req.search_count > 2000 else search_req.search_count
-    pages = search_req.search_result['pages']
-
+    search_req.search_first()
     if search_req.search_count == 0:
         print('Вакансии не найдены, измените критерии')
     else:
         print('Всего найдено вакансий', search_req.search_count)
-        search_req.get_vacancies_data()
-        print(f'обработано {min(search_req.search_count, search_req.per_page)}')
-        if pages > 1:
-            for page in range(1, pages):
-                search_req.params['page'] = page
-                search_req.get_search_data()
-                search_req.get_vacancies_data()
-                print(f'обработано {min(search_req.search_count, search_req.per_page * (page + 1))}')
+    search_req.search_last()
+    print('Обрабатаны все вакансии')
 
     # запись в файл
     search_req.get_result()
-    res = json.dumps(search_res.result)
+    res = json.dumps(search_req.result)
     with open('search_result.json', 'w') as f:
         f.write(f'{res}\n')
-
-
