@@ -61,31 +61,28 @@
 				<header class="page-header">
 					<h1 class="page-title">Search vacancies</h1>
 				</header>
-					<form action = "results.html">
+					<form method="post">
+<!--					<form method="post" action = "results.html">-->
 						<div class="form-group">
 							<label for="exampleInputText">Строка поиска</label>
-							<input type="text" class="form-control" id="exampleInputText" placeholder="Введите текст для поиска">
+							<input type="text" name="vacancy" class="form-control" id="exampleInputText" placeholder="Введите текст для поиска">
 					  	</div>
 						<br>
 						<div class="form-group">
-							<label for="exampleBtnSerachStrict">Точный поиск:</label>
-							<div class="btn-group btn-group-toggle" data-toggle="buttons">
-							  <label class="btn btn-secondary active">
-								<input type="radio" name="options" id="exampleBtnSerachStrict" autocomplete="off" checked> Да
-							  </label>
-							  <label class="btn btn-secondary">
-								<input type="radio" name="options" id="exampleBtnSerachStrict" autocomplete="off"> Нет
-							  </label>
-							</div>
+							<label>Точный поиск:</label>
+								<div class="btn-group btn-group-toggle" data-toggle="buttons">
+								  <label class="btn btn-secondary active">
+									<input type="radio" name="strict_search" value="y" autocomplete="off" checked> Да
+								  </label>
+								  <label class="btn btn-secondary">
+									<input type="radio" name="strict_search" value="n" autocomplete="off"> Нет
+								  </label>
+								</div>
 						</div>
 						<br>
-						<div class="form-group">
-							<label for="exampleInputText">Поиск по региону:</label>
-							<input type="text" class="form-control" id="exampleSerachArea" placeholder="Введите регион поиска">
-					  	</div>
 						<div>
 							<label for="regionDataList" class="form-label">Регион поиска</label>
-							<input class="form-control" list="regionList" id="regionDataList" placeholder="Начните ввод текста...">
+							<input name="search_area" class="form-control" list="regionList" id="regionDataList" placeholder="Начните ввод текста...">
 							<datalist id="regionList">
 								{% for region in regions %}
 								<option value="{{ region }}">
@@ -95,7 +92,7 @@
 
 						<br>
 						<div>
-							<p><a class="btn btn-default btn-link" href="/results/" role="button">SEE RESULTS</a>
+							<button type="submit" class="btn btn-primary" href="/results/">SEE RESULTS</button>
 						</div>
 					</form>
 			</article>

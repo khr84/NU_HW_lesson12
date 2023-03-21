@@ -19,7 +19,7 @@ class Search:
         self.pages = 0
         self.requirement_count = 0
         self.result = dict()
-        self.params['period'] = 10
+        self.params['period'] = 3
         self.params['per_page'] = 100
 
     def set_search_text(self, strict):
@@ -56,7 +56,7 @@ class Search:
         res_list = []
         res_cnt = 0
         if len(list_skill) > 1:
-            for i in range(len(list_skill)):
+            for i in range(len(list_skill)-1):
                 res_list.append(list_skill[i])
                 res_cnt += list_skill[i]['count']
                 if list_skill[i]['count'] == list_skill[i + 1]['count']:
@@ -99,7 +99,6 @@ class Search:
     def search_last(self):
         if self.pages > 1:
             for page in range(1, self.pages):
-                print(1)
                 self.params['page'] = page
                 self.get_search_data()
                 self.get_vacancies_data()

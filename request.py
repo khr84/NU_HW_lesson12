@@ -28,11 +28,11 @@ if __name__ == '__main__':
         print('Вакансии не найдены, измените критерии')
     else:
         print('Всего найдено вакансий', search_req.search_count)
-    search_req.search_last()
-    print('Обрабатаны все вакансии')
+        search_req.search_last()
+        print('Обрабатаны все вакансии')
 
-    # запись в файл
-    search_req.get_result()
-    res = json.dumps(search_req.result)
-    with open('search_result.json', 'w') as f:
-        f.write(f'{res}\n')
+        # запись в файл
+        search_req.get_result()
+        res = json.dumps(search_req.result)
+        with open('search_result.json', 'w') as f:
+            f.write(f'{res}\n')

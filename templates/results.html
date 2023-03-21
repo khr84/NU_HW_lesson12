@@ -94,7 +94,17 @@
 				</header>
 			</article>
 			<!-- /Sidebar -->
-
+			<div>
+				Поиск вакансий: {{vacancy}}<br>
+				Строгий поиск: {{strict_search}}<br>
+				Регион поиска: {{search_area}}<br>
+				Кол-во найденных вакансий: {{count_vacancy}}<br>
+				<hr>
+				Средняя ЗП: {{salary}}<br><br>
+				{% for req in requirements %}
+					Требование к вакансии: {{req.name}}, процент: {{req.percent}}, частота повторения {{req.count}} <br>
+				{% endfor %}<br>
+			</div>
 		</div>
 	</div>	<!-- /container -->
 	
