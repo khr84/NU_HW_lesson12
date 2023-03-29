@@ -14,11 +14,13 @@ class Dictionaries:
         currency = result['currency']
         for cur in currency:
             self.currency[cur['code']] = cur['rate']
+        return self.currency
 
     def init_areas(self):
         url_dict = f'{self.domain}areas'
         result = requests.get(url_dict).json()
         self.get_areas(result)
+        return self.areas
 
     def get_areas(self, lst):
         if len(lst) > 0:
@@ -33,9 +35,8 @@ class Vacancy:
     def __init__(self):
         self.salary_list = []
         self.skills = dict()
-        self.currency = dict()
 
-    def get_salary(self, vac_dict = {}):
+    def get_salary(self, vac_dict = {}, cur_dict = {}):
         salary = vac_dict['salary']
         try:
             low = salary['from']
@@ -43,14 +44,14 @@ class Vacancy:
             gross = 0.87 if salary['gross'] else 1
             cur = salary['currency']
             if isinstance(low, int) and isinstance(high, int):
-                low = round(low * gross / self.currency[cur])
-                high = round(high * gross / self.currency[cur])
+                low = round(low * gross / cur_dict[cur])
+                high = round(high * gross / cur_dict[cur])
             elif isinstance(low, int):
-                high = round(low * gross / self.currency[cur])
-                low = round(low * gross / self.currency[cur])
+                high = round(low * gross / cur_dict[cur])
+                low = round(low * gross / cur_dict[cur])
             elif isinstance(high, int):
-                low = round(high * gross / self.currency[cur])
-                high = round(high * gross / self.currency[cur])
+                low = round(high * gross / cur_dict[cur])
+                high = round(high * gross / cur_dict[cur])
             else:
                 pass
             self.salary_list.append({'low':low, 'high':high})
