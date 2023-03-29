@@ -38,6 +38,7 @@
 					<li><a href="/">Home</a></li>
 					<li><a href="/search">Search</a></li>
 					<li class="active"><a href="/results">Result</a></li>
+					<li><a href="/history/">History</a></li>
 				</ul>
 			</div><!--/.nav-collapse -->
 		</div>
@@ -92,19 +93,19 @@
 				<header class="page-header">
 					<h1 class="page-title">Результаты поиска вакансий</h1>
 				</header>
+				<div>
+					Поиск вакансий: {{vacancy}}<br>
+					Строгий поиск: {{strict_search}}<br>
+					Регион поиска: {{search_area}}<br>
+					Кол-во найденных вакансий: {{count_vacancy}}<br>
+					<hr>
+					Средняя ЗП: {{salary}}<br><br>
+					{% for req in requirements %}
+						Требование к вакансии: {{req.name}}, процент: {{req.percent}}, частота повторения {{req.count}} <br>
+					{% endfor %}<br>
+				</div>
 			</article>
 			<!-- /Sidebar -->
-			<div>
-				Поиск вакансий: {{vacancy}}<br>
-				Строгий поиск: {{strict_search}}<br>
-				Регион поиска: {{search_area}}<br>
-				Кол-во найденных вакансий: {{count_vacancy}}<br>
-				<hr>
-				Средняя ЗП: {{salary}}<br><br>
-				{% for req in requirements %}
-					Требование к вакансии: {{req.name}}, процент: {{req.percent}}, частота повторения {{req.count}} <br>
-				{% endfor %}<br>
-			</div>
 		</div>
 	</div>	<!-- /container -->
 	
