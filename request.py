@@ -36,3 +36,4 @@ if __name__ == '__main__':
         res = json.dumps(search_req.result)
         with open('search_result.json', 'w') as f:
             f.write(f'{res}\n')
+        search_req.write_db()

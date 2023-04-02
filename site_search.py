@@ -1,5 +1,5 @@
 import search_func
-import time
+from datetime import datetime, timedelta
 from flask import Flask, render_template, request, redirect
 
 app = Flask(__name__)
@@ -22,8 +22,27 @@ def search():
 def results():
     return render_template('results.html')
 
+@app.route('/history/')
+def history():
+    hide_button = ''
+    return render_template('history.html', hide_button = hide_button)
+
+@app.route('/history/', methods=['POST'])
+def history_post():
+    hist_period = request.form['hist_period']
+    hist_period = min(10, int(hist_period))
+    now = datetime.now()
+    date_end = now + timedelta(days=1)
+    date_end = date_end.strftime("%Y.%m.%d")
+    date_beg = now - timedelta(days=hist_period)
+    date_beg = date_beg.strftime("%Y.%m.%d")
+    res_list = search_func.read_db(date_beg, date_end)
+    context = {'vacancy_list': res_list, 'hide_button': 'hidden'}
+    return render_template('history.html', **context)
+
 @app.route('/search/', methods=['POST'])
 def search_post():
+    search_req = search_func.Search()
     search_req.search_vacancy = request.form['vacancy']
     strict = request.values['strict_search']
     search_req.set_search_text(strict)
@@ -47,8 +66,7 @@ def search_post():
             search_req.get_result()
             context['salary'] = f'От {search_req.result["salary"]["from"]} до {search_req.result["salary"]["to"]}, определено по {search_req.result["salary"]["vacancy_with_salary"]} вакансиям с ЗП'
             context['requirements'] = search_req.result["requirements"]
-
-
+            search_req.write_db()
         return render_template('results.html', **context)
     return redirect('/search')
 
