@@ -1,31 +1,40 @@
-import search_func
 from datetime import datetime, timedelta
 from flask import Flask, render_template, request, redirect
+import db_func_orm as dbfo
+import db_func as dbf
+import search_func
+import vacancy_func as vac
+
 
 app = Flask(__name__)
+
 
 @app.route('/')
 def index():
     return render_template('index.html')
 
+
 @app.route('/search/')
 def search():
-    # обнуляем данные, если повторно пошли на поиск
-    search_req.search_vacancy = ''
-    search_req.search_strict = False
-    search_req.search_area = 'None'
-    search_req.params.pop('text', 'None')
-    search_req.params.pop('area', -1000)
-    return render_template('search.html', regions = search_req.areas_dict)
+    # # обнуляем данные, если повторно пошли на поиск
+    # search_req.search_vacancy = ''
+    # search_req.search_strict = False
+    # search_req.search_area = 'None'
+    # search_req.params.pop('text', 'None')
+    # search_req.params.pop('area', -1000)
+    return render_template('search.html', regions=areas_dict)
+
 
 @app.route('/results/')
 def results():
     return render_template('results.html')
 
+
 @app.route('/history/')
 def history():
     hide_button = ''
-    return render_template('history.html', hide_button = hide_button)
+    return render_template('history.html', hide_button=hide_button)
+
 
 @app.route('/history/', methods=['POST'])
 def history_post():
@@ -36,9 +45,11 @@ def history_post():
     date_end = date_end.strftime("%Y.%m.%d")
     date_beg = now - timedelta(days=hist_period)
     date_beg = date_beg.strftime("%Y.%m.%d")
-    res_list = search_func.read_db(date_beg, date_end)
+    # res_list = dbf.read_db(date_beg, date_end)
+    res_list = dbfo.db_orm_read(date_beg, date_end)
     context = {'vacancy_list': res_list, 'hide_button': 'hidden'}
     return render_template('history.html', **context)
+
 
 @app.route('/search/', methods=['POST'])
 def search_post():
@@ -53,7 +64,7 @@ def search_post():
         # делаем расчет
         search_req.search_first()
         context = {
-            'vacancy':search_req.search_vacancy,
+            'vacancy': search_req.search_vacancy,
             'strict_search': search_req.search_strict,
             'search_area': search_req.search_area,
             'count_vacancy': search_req.search_count
@@ -66,10 +77,17 @@ def search_post():
             search_req.get_result()
             context['salary'] = f'От {search_req.result["salary"]["from"]} до {search_req.result["salary"]["to"]}, определено по {search_req.result["salary"]["vacancy_with_salary"]} вакансиям с ЗП'
             context['requirements'] = search_req.result["requirements"]
-            search_req.write_db()
+            # dbf.write_db(search_req.result)
+            dbfo.db_orm_check_vac(search_req.result)
+            dbfo.db_orm_import_vacancy(search_req.result)
+            dbfo.db_orm_import_salary(search_req.result)
+            dbfo.db_orm_import_skill(search_req.result)
+            dbfo.db_orm_import_vac_to_skill(search_req.result)
         return render_template('results.html', **context)
     return redirect('/search')
 
+
 if __name__ == '__main__':
-    search_req = search_func.Search()
-    app.run(debug = True)
+    hh_dict = vac.Dictionaries()
+    areas_dict = hh_dict.init_areas()
+    app.run(debug=True)

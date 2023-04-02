@@ -1,6 +1,7 @@
 import search_func as search
 import json
-
+import db_func as dbf
+import db_func_orm as dbfo
 
 if __name__ == '__main__':
     search_req = search.Search()
@@ -14,10 +15,10 @@ if __name__ == '__main__':
 
     # поиск по региону
     search_by_area = ''
-    while search_by_area not in ['y','n']:
+    while search_by_area not in ['y', 'n']:
         search_by_area = input('Нужен поиск по региону? y/n ').lower()
         if search_by_area == 'y':
-            area_str='_'
+            area_str = '_'
             while area_str not in search_req.areas_dict:
                 area_str = input('Введите регион поиска: ')
             search_req.set_area(area_str)
@@ -36,4 +37,9 @@ if __name__ == '__main__':
         res = json.dumps(search_req.result)
         with open('search_result.json', 'w') as f:
             f.write(f'{res}\n')
-        search_req.write_db()
+        dbf.write_db(search_req.result)
+        # dbfo.db_orm_check_vac(search_req.result)
+        # dbfo.db_orm_import_vacancy(search_req.result)
+        # dbfo.db_orm_import_salary(search_req.result)
+        # dbfo.db_orm_import_skill(search_req.result)
+        # dbfo.db_orm_import_vac_to_skill(search_req.result)

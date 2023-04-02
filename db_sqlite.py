@@ -1,6 +1,4 @@
 import sqlite3
-from datetime import datetime, timedelta
-import search_func
 conn = sqlite3.connect('sqlite.db')
 cursor = conn.cursor()
 
@@ -60,6 +58,13 @@ cursor = conn.cursor()
 #     print(result)
 
 # список таблиц
-sql_query = """SELECT name FROM sqlite_master WHERE type='table';"""
-cursor.execute(sql_query)
-print(cursor.fetchall())
+# sql_query = """SELECT * FROM region WHERE reg_id=113;"""
+# cursor.execute(sql_query)
+# print(cursor.fetchall())
+
+
+sql = f'select v.id, v.name, v.strict_search, v.region_id, v.count_vac, s.low, s.high, s.count, v.search_date \
+      from search_vac v join salary s on s.id = v.id'
+cursor.execute(sql)
+result_list = cursor.fetchall()
+print(result_list)

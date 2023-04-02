@@ -1,20 +1,20 @@
 from sqlalchemy import Column, Integer, String, create_engine, ForeignKey, Table, schema, Float
 from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.orm import sessionmaker
 
 engine = create_engine('sqlite:///sqlite_orm.db', echo=True)
-
 Base = declarative_base()
+
 
 class DBRegion(Base):
     __tablename__ = 'region'
     id = Column(Integer, primary_key=True)
-    reg_id = Column(Integer)
+    reg_id = Column(Integer, unique=True)
     reg_name = Column(String)
 
     def __init__(self, id, name):
         self.reg_id = id
         self.reg_name = name
+
 
 class DBSkill(Base):
     __tablename__ = 'skill'
@@ -23,6 +23,7 @@ class DBSkill(Base):
 
     def __init__(self, name):
         self.skill_name = name
+
 
 class DBVacancy(Base):
     __tablename__ = 'search_vac'
@@ -56,8 +57,9 @@ class DBSalary(Base):
         self.high = high
         self.count = cnt
 
+
 vac_to_skill = Table('vac_to_skill', Base.metadata,
-    Column('id', Integer, primary_key = True),
+    Column('id', Integer, primary_key=True),
     Column('vac_id', Integer, ForeignKey('search_vac.id')),
     Column('skill_id', Integer, ForeignKey('skill.skill_id')),
     Column('percent', Float)
