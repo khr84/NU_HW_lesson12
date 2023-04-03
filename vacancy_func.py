@@ -1,5 +1,6 @@
 import requests
 
+
 class Dictionaries:
 
     domain = 'https://api.hh.ru/'
@@ -30,13 +31,14 @@ class Dictionaries:
         else:
             pass
 
+
 class Vacancy:
 
     def __init__(self):
         self.salary_list = []
         self.skills = dict()
 
-    def get_salary(self, vac_dict = {}, cur_dict = {}):
+    def get_salary(self, vac_dict={}, cur_dict={}):
         salary = vac_dict['salary']
         try:
             low = salary['from']
@@ -54,15 +56,14 @@ class Vacancy:
                 high = round(high * gross / cur_dict[cur])
             else:
                 pass
-            self.salary_list.append({'low':low, 'high':high})
+            self.salary_list.append({'low': low, 'high': high})
         except TypeError:
             pass
 
-    def get_skills(self, skill_dict = {}):
+    def get_skills(self, skill_dict={}):
         skills_list = skill_dict['key_skills']
         for skill in skills_list:
             try:
                 self.skills[skill['name']] += 1
             except:
                 self.skills[skill['name']] = 1
-

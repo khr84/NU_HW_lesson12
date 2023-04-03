@@ -1,6 +1,4 @@
 import sqlite3
-from datetime import datetime, timedelta
-import search_func
 conn = sqlite3.connect('sqlite.db')
 cursor = conn.cursor()
 
@@ -8,6 +6,11 @@ cursor = conn.cursor()
 # cursor.execute('create table region \
 #  (reg_id integer primary key, \
 # reg_name text)')
+
+# ------ table skill
+# cursor.execute('create table skill \
+#  (skill_id integer primary key autoincrement, \
+# skill_name text unique)')
 
 # ------ table search_vac
 # cursor.execute('create table search_vac \
@@ -18,11 +21,6 @@ cursor = conn.cursor()
 #  region_id integer references region (reg_id),\
 #  strict_search  integer,\
 #  unique(name, region_id, strict_search))')
-
-# ------ table skill
-# cursor.execute('create table skill \
-#  (skill_id integer primary key autoincrement, \
-# skill_name text unique)')
 
 # ------ table salary
 # cursor.execute('create table salary \
@@ -39,15 +37,17 @@ cursor = conn.cursor()
 #  percent  real)')
 
 # чистим данные
-tbl_list = ['region', 'search_vac', 'skill', 'salary', 'vac_to_skill']
-for tbl in tbl_list:
-    sql = f'delete from {tbl}'
-    cursor.execute(sql)
-    conn.commit()
+# tbl_list = ['region', 'search_vac', 'skill', 'salary', 'vac_to_skill']
+# for tbl in tbl_list:
+#     sql = f'delete from {tbl}'
+#     cursor.execute(sql)
+#     conn.commit()
 
 #удаляем таблицу
-# sql = 'drop table search_vac'
-# cursor.execute(sql)
+# tbl_list = ['region', 'search_vac', 'skill', 'salary', 'vac_to_skill']
+# for tbl in tbl_list:
+#     sql = f'drop table {tbl}'
+#     cursor.execute(sql)
 
 #смотрим данные
 # tbl_list = ['search_vac', 'skill', 'salary', 'vac_to_skill']
@@ -57,17 +57,14 @@ for tbl in tbl_list:
 #     result = cursor.fetchall()
 #     print(result)
 
-# now = datetime.now()
-# date_end = now+timedelta(days = 1)
-# date_end = date_end.strftime("%Y.%m.%d")
-# date_beg = now-timedelta(days = 5)
-# date_beg = date_beg.strftime("%Y.%m.%d")
-#
-# sql = f'select v.id, v.name, v.strict_search, v.count_vac, r.reg_name, s.low, s.high, s.count, v.search_date \
-#       from search_vac v join region r on r.reg_id = v.region_id \
-#         join salary s on s.id = v.id where v.search_date >= \"{date_beg}\" and v.search_date < \"{date_end}\"'
-# cursor.execute(sql)
-# result = cursor.fetchall()
-# result.sort(key = lambda x: x[-1], reverse = True)
-# cursor.close()
-# print(result)
+# список таблиц
+# sql_query = """SELECT * FROM region WHERE reg_id=113;"""
+# cursor.execute(sql_query)
+# print(cursor.fetchall())
+
+
+sql = f'select v.id, v.name, v.strict_search, v.region_id, v.count_vac, s.low, s.high, s.count, v.search_date \
+      from search_vac v join salary s on s.id = v.id'
+cursor.execute(sql)
+result_list = cursor.fetchall()
+print(result_list)
